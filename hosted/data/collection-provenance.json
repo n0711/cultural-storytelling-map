@@ -1,0 +1,73 @@
+{
+  "repository": "https://github.com/hussainJamil24/cultural-storytelling-map",
+  "commit": "d8306ba6554320513a2b4bea93b8c97c2df3542b",
+  "records": [
+    {
+      "id": "1",
+      "status": "approved",
+      "content_sha256": "61a7bce6fc89a802fb2e85516cc403d8200ee8884b5cf878e82d1edbb909507b"
+    },
+    {
+      "id": "2",
+      "status": "approved",
+      "content_sha256": "163eec85b6564b8a7aa62479726c856bda853a06e36c15a40959819a6234c37e"
+    },
+    {
+      "id": "4",
+      "status": "approved",
+      "content_sha256": "e996a000431f5fc2a67f0491a6271db3e2b5aeb24551836d1088826797cdd22e"
+    },
+    {
+      "id": "5",
+      "status": "approved",
+      "content_sha256": "0a583b0cfeb3c42897b7e3a4133ad4a873132c049d951766783323b57b5b604e"
+    },
+    {
+      "id": "6",
+      "status": "approved",
+      "content_sha256": "a3903648e161a3f0a9163488fc44d04b8a47e4759f4bf6fdec664f4b0f55f797"
+    },
+    {
+      "id": "7",
+      "status": "approved",
+      "content_sha256": "666e3b1cffd712e956aabb76239987197745abab8dcf92537670e42defc6bfa2"
+    },
+    {
+      "id": "8",
+      "status": "approved",
+      "content_sha256": "a8da2d1ced9de61f484ecc6a8a0e8e5d515edfcf914f723b4a6a5eae68b394db"
+    },
+    {
+      "id": "9",
+      "status": "approved",
+      "content_sha256": "9c638a1f99d3a61df45998b1361c9de89a3cbc2948176ec79c253b426ec0123b"
+    },
+    {
+      "id": "10",
+      "status": "approved",
+      "content_sha256": "882601c0f277a0029b14a0657c6cf429f770340a49f6c926c4399466465b4a39"
+    },
+    {
+      "id": "11",
+      "status": "approved",
+      "content_sha256": "3e059187a4be348c57fb1daebaf0340f677c29411e1d4b39a46820d17ba1d98c"
+    },
+    {
+      "id": "16",
+      "status": "approved",
+      "content_sha256": "b2d9248e53ceb744f6ae7e2bb1d18fed9a953d0e3c3b74d55c24c226bbe9b8d3"
+    }
+  ],
+  "excluded_ids": [
+    "12",
+    "13",
+    "14",
+    "15",
+    "17"
+  ],
+  "preview_ids": [
+    "5",
+    "7",
+    "8"
+  ]
+}

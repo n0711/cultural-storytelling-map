@@ -14,7 +14,7 @@ Copy and run these lines one at a time. Use a new folder, even if you already ha
 
 ```powershell
 cd $env:USERPROFILE
-git clone https://github.com/hussainJamil24/cultural-storytelling-map.git narrify-demo
+git clone https://github.com/n0711/cultural-storytelling-map.git narrify-demo
 cd narrify-demo
 .\SetupDemo.bat
 ```

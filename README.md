@@ -4,12 +4,18 @@ React/Leaflet frontend, FastAPI/SQLite backend, and server-side Gemini features.
 
 **For the Windows demo: follow [the short setup instructions](docs/WINDOWS_DEMO.md), then [the 115-second filming checklist](docs/DEMO_FILMING_CHECKLIST.md).**
 
+## Hosted launch edition
+
+The hosted map is at https://narrify-cultural-map.fitslug32.chatgpt.site. The new [hosted edition](hosted/README.md) contains the launch source, payment activation instructions and verification limits.
+
+It presents eleven curated approved stories with three free previews and an introductory **€1.99/month EUR** membership. Checkout is **closed pending Stripe merchant configuration and live payment verification**. Institutional pilots have separate scope/pricing; a future government pitch does not automatically change existing subscriptions. The Windows demo below is preserved.
+
 ## Start the Windows demo
 
 Install Git, Python **3.13** (including its launcher), and Node.js **24 LTS**. Open PowerShell:
 
 ```powershell
-git clone https://github.com/hussainJamil24/cultural-storytelling-map.git narrify-demo
+git clone https://github.com/n0711/cultural-storytelling-map.git narrify-demo
 cd narrify-demo
 .\SetupDemo.bat
 .\RunDemo.bat
