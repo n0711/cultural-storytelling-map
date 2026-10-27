@@ -1,0 +1,29 @@
+plugins { id 'com.android.application' }
+
+android {
+    namespace 'tech.pelaos.narrify'
+    compileSdk 36
+    defaultConfig {
+        applicationId 'tech.pelaos.narrify'
+        minSdk 24
+        targetSdk 36
+        versionCode 1
+        versionName '0.1.0'
+    }
+    buildTypes {
+        debug {
+            applicationIdSuffix '.debug'
+            versionNameSuffix '-preview'
+            resValue 'string', 'app_name', 'Narrify Preview'
+        }
+        release { minifyEnabled false }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+}
+
+dependencies {
+    implementation 'com.google.androidbrowserhelper:androidbrowserhelper:2.7.4'
+}
