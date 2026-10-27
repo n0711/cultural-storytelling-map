@@ -6,7 +6,11 @@ import re
 import subprocess
 
 apk = Path(__file__).parent / "app/build/outputs/apk/debug/app-debug.apk"
-signer = Path(os.environ["ANDROID_HOME"]) / "build-tools/35.0.0/apksigner"
+sdk = os.environ.get("ANDROID_HOME") or os.environ.get("ANDROID_SDK_ROOT")
+if not sdk:
+    raise SystemExit("Set ANDROID_HOME to the Android SDK directory before exporting the certificate.")
+signer_name = "apksigner.bat" if os.name == "nt" else "apksigner"
+signer = Path(sdk) / "build-tools/35.0.0" / signer_name
 result = subprocess.run([str(signer), "verify", "--print-certs", str(apk)],
                         check=True, capture_output=True, text=True)
 match = re.search(r"Signer #1 certificate SHA-256 digest: ([0-9a-fA-F]{64})", result.stdout)

@@ -2,3 +2,4 @@
 backend/demo/*.json -text
 backend/demo/uploads/** -text
 *.bat text eol=crlf
+mobile/android/gradlew text eol=lf
