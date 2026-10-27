@@ -1,0 +1,1 @@
+ALTER TABLE `submissions` ADD `language` text DEFAULT 'und' NOT NULL;

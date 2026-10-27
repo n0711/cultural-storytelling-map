@@ -11,7 +11,8 @@
     "preview": false,
     "source": "Original Narrify community collection",
     "sourceUrl": "https://github.com/hussainJamil24/cultural-storytelling-map",
-    "createdAt": "2026-06-17 21:16:57.649210"
+    "createdAt": "2026-06-17 21:16:57.649210",
+    "language": "en"
   },
   {
     "id": "2",
@@ -25,7 +26,8 @@
     "preview": false,
     "source": "Original Narrify community collection",
     "sourceUrl": "https://github.com/hussainJamil24/cultural-storytelling-map",
-    "createdAt": "2026-06-18 09:46:18"
+    "createdAt": "2026-06-18 09:46:18",
+    "language": "en"
   },
   {
     "id": "4",
@@ -39,7 +41,8 @@
     "preview": false,
     "source": "Original Narrify community collection",
     "sourceUrl": "https://github.com/hussainJamil24/cultural-storytelling-map",
-    "createdAt": "2026-09-09 10:15:56.641943"
+    "createdAt": "2026-09-09 10:15:56.641943",
+    "language": "en"
   },
   {
     "id": "5",
@@ -53,7 +56,8 @@
     "preview": true,
     "source": "Original Narrify community collection",
     "sourceUrl": "https://github.com/hussainJamil24/cultural-storytelling-map",
-    "createdAt": "2026-09-22T12:49:12.107292"
+    "createdAt": "2026-09-22T12:49:12.107292",
+    "language": "en"
   },
   {
     "id": "6",
@@ -67,7 +71,8 @@
     "preview": false,
     "source": "Original Narrify community collection",
     "sourceUrl": "https://github.com/hussainJamil24/cultural-storytelling-map",
-    "createdAt": "2026-09-22T12:49:12.107292"
+    "createdAt": "2026-09-22T12:49:12.107292",
+    "language": "en"
   },
   {
     "id": "7",
@@ -81,7 +86,8 @@
     "preview": true,
     "source": "Original Narrify community collection",
     "sourceUrl": "https://github.com/hussainJamil24/cultural-storytelling-map",
-    "createdAt": "2026-09-22T12:49:12.107292"
+    "createdAt": "2026-09-22T12:49:12.107292",
+    "language": "en"
   },
   {
     "id": "8",
@@ -95,7 +101,8 @@
     "preview": true,
     "source": "Original Narrify community collection",
     "sourceUrl": "https://github.com/hussainJamil24/cultural-storytelling-map",
-    "createdAt": "2026-09-22T12:49:12.107292"
+    "createdAt": "2026-09-22T12:49:12.107292",
+    "language": "en"
   },
   {
     "id": "9",
@@ -109,7 +116,8 @@
     "preview": false,
     "source": "Original Narrify community collection",
     "sourceUrl": "https://github.com/hussainJamil24/cultural-storytelling-map",
-    "createdAt": "2026-09-22T12:49:12.107292"
+    "createdAt": "2026-09-22T12:49:12.107292",
+    "language": "en"
   },
   {
     "id": "10",
@@ -123,7 +131,8 @@
     "preview": false,
     "source": "Original Narrify community collection",
     "sourceUrl": "https://github.com/hussainJamil24/cultural-storytelling-map",
-    "createdAt": "2026-09-22T12:49:12.107292"
+    "createdAt": "2026-09-22T12:49:12.107292",
+    "language": "en"
   },
   {
     "id": "11",
@@ -137,7 +146,8 @@
     "preview": false,
     "source": "Original Narrify community collection",
     "sourceUrl": "https://github.com/hussainJamil24/cultural-storytelling-map",
-    "createdAt": "2026-09-22T12:49:12.107292"
+    "createdAt": "2026-09-22T12:49:12.107292",
+    "language": "en"
   },
   {
     "id": "16",
@@ -151,6 +161,7 @@
     "preview": false,
     "source": "Original Narrify community collection",
     "sourceUrl": "https://github.com/hussainJamil24/cultural-storytelling-map",
-    "createdAt": "2026-09-22 18:51:04.018865"
+    "createdAt": "2026-09-22 18:51:04.018865",
+    "language": "en"
   }
 ]

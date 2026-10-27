@@ -71,10 +71,10 @@ async function handle(req:Request){
  }
  if(path==='contributions'&&req.method==='POST'){
   const u=requireUser();await rateLimit('submit:'+u.userId,5,86400);let s;try{s=validateStory(await body(req))}catch(e:any){throw new HttpError(400,e.message)}
-  await db().prepare("INSERT INTO submissions(id,user_id,title,content,category,latitude,longitude,author,place,source_url,status,created_at) VALUES(?,?,?,?,?,?,?,?,?,?,'pending',?)").bind(crypto.randomUUID(),u.userId,s.title,s.content,s.category,s.latitude,s.longitude,s.author,s.place,s.sourceUrl||null,now()).run();return json({message:'Thank you. Your story is waiting for human review.'},201);
+  await db().prepare("INSERT INTO submissions(id,user_id,title,content,category,latitude,longitude,author,place,source_url,language,status,created_at) VALUES(?,?,?,?,?,?,?,?,?,?,?,'pending',?)").bind(crypto.randomUUID(),u.userId,s.title,s.content,s.category,s.latitude,s.longitude,s.author,s.place,s.sourceUrl||null,s.language,now()).run();return json({message:'Thank you. Your story is waiting for human review.'},201);
  }
  if(path==='admin/submissions'&&req.method==='GET'){
-  requireUser();if(!isAdmin(user))throw new HttpError(403,'Moderator access required.');const r=await db().prepare('SELECT id,title,content,category,latitude,longitude,author,place,source_url,status,created_at FROM submissions ORDER BY created_at DESC LIMIT 100').all();return json(r.results);
+  requireUser();if(!isAdmin(user))throw new HttpError(403,'Moderator access required.');const r=await db().prepare('SELECT id,title,content,category,latitude,longitude,author,place,source_url,language,status,created_at FROM submissions ORDER BY created_at DESC LIMIT 100').all();return json(r.results);
  }
  if(path==='admin/review'&&req.method==='POST'){
   const u=requireUser();if(!isAdmin(u))throw new HttpError(403,'Moderator access required.');const b=await body(req);if(!['approved','rejected','pending'].includes(b.status))throw new HttpError(400,'Choose a review decision.');const r=await db().prepare('UPDATE submissions SET status=?,reviewed_by=? WHERE id=?').bind(b.status,u.userId,b.id).run();if(!r.meta.changes)throw new HttpError(404,'Contribution not found.');return json({ok:true});
