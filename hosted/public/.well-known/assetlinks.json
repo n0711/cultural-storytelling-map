@@ -1,0 +1,10 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "tech.pelaos.narrify.debug",
+      "sha256_cert_fingerprints": ["F2:BC:9A:44:BB:18:68:AD:F1:62:D9:51:CE:B0:C8:DC:1E:84:6D:DE:A2:D1:7C:F0:B3:EF:62:13:AF:1C:6C:8E"]
+    }
+  }
+]
