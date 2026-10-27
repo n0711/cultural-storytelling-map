@@ -7,6 +7,7 @@ import {validPrice,activeSubscription,publicStory,validateStory} from '../lib/po
 import {verifyWebhook} from '../lib/webhook.mjs';
 import {DatabaseSync} from 'node:sqlite';
 import {STORY_LANGUAGES,storyLanguage,normalizeSearch,filterStories} from '../lib/languages.mjs';
+import {CYPRUS_BOUNDS,withinCyprusBounds,publicMapPoint} from '../lib/location.mjs';
 const price={active:true,currency:'eur',unit_amount:199,type:'recurring',recurring:{interval:'month',interval_count:1,usage_type:'licensed'},billing_scheme:'per_unit'};
 test('only a fixed €1.99 monthly EUR price passes the checkout price boundary',()=>{
  assert.equal(validPrice(price),true);
@@ -101,4 +102,17 @@ test('language migration preserves old contributions and accepts new right-to-le
   assert.equal(rtl.language,'ar');assert.equal(rtl.content,'هذه حكاية من القرية');assert.equal(rtl.status,'pending');
   assert.equal(database.prepare("SELECT count(*) AS n FROM submissions WHERE status='approved'").get().n,0);
  }finally{database.close();}
+});
+test('public map selections are bounded and rounded without collecting a device location',()=>{
+ assert.deepEqual(publicMapPoint(35.1738642,33.3647234),{latitude:35.174,longitude:33.365});
+ assert.ok(withinCyprusBounds(CYPRUS_BOUNDS.south,CYPRUS_BOUNDS.west));
+ assert.ok(withinCyprusBounds(CYPRUS_BOUNDS.north,CYPRUS_BOUNDS.east));
+ for(const [lat,lng] of [[34.399,33.3],[35.801,33.3],[35.1,32.099],[35.1,34.701],[NaN,33.3],[35.1,Infinity],[null,33.3],['35.1',33.3]])assert.equal(publicMapPoint(lat,lng),null);
+});
+test('map-selected and manually-entered coordinates share server validation',()=>{
+ const story={title:'A village story',content:'An original memory from a village in Cyprus. '.repeat(4),author:'Anonymous',place:'Lefkara',category:'heritage',consent:true,language:'el'};
+ const picked=publicMapPoint(34.866423,33.305412);
+ assert.deepEqual([validateStory({...story,...picked}).latitude,validateStory({...story,...picked}).longitude],[34.866,33.305]);
+ assert.equal(validateStory({...story,latitude:'34.866',longitude:'33.305'}).latitude,34.866);
+ for(const patch of [{latitude:'',longitude:''},{latitude:'34.3',longitude:'33.3'},{latitude:'35.1',longitude:'34.8'}])assert.throws(()=>validateStory({...story,...patch}));
 });
