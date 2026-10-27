@@ -26,4 +26,5 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - run: pnpm exec tsc --noEmit
       - run: node --test tests/launch.test.mjs
+      - run: node --test tests/i18n.test.mjs
       - run: pnpm run build
