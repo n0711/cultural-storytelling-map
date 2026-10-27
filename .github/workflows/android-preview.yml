@@ -20,6 +20,7 @@ jobs:
           - os: windows-latest
             artifact: narrify-android-debug-windows
     runs-on: ${{ matrix.os }}
+    timeout-minutes: 25
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-java@v4
@@ -33,10 +34,10 @@ jobs:
       - uses: gradle/actions/setup-gradle@v4
       - name: Build with the Gradle Wrapper (Linux)
         if: runner.os == 'Linux'
-        run: ./mobile/android/gradlew -p mobile/android :app:assembleDebug --no-daemon
+        run: ./mobile/android/gradlew -p mobile/android :app:assembleDebug :app:lintDebug --no-daemon
       - name: Build with the Gradle Wrapper (Windows)
         if: runner.os == 'Windows'
-        run: .\mobile\android\gradlew.bat -p mobile/android :app:assembleDebug --no-daemon
+        run: .\mobile\android\gradlew.bat -p mobile/android :app:assembleDebug :app:lintDebug --no-daemon
       - name: Export public certificate fingerprint
         run: python mobile/android/export-certificate.py
       - uses: actions/upload-artifact@v4
@@ -47,4 +48,29 @@ jobs:
             mobile/android/app/build/outputs/apk/debug/certificate-sha256.txt
             mobile/android/app/build/outputs/apk/debug/app-debug.apk.sha256
           if-no-files-found: error
+          retention-days: 14
+      - name: Enable emulator acceleration
+        if: runner.os == 'Linux'
+        run: sudo chmod a+rw /dev/kvm
+      - name: Open Narrify on an Android emulator
+        if: runner.os == 'Linux'
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 35
+          target: google_apis
+          arch: x86_64
+          profile: pixel_7
+          ram-size: 2048M
+          emulator-boot-timeout: 300
+          emulator-options: -no-window -gpu swiftshader_indirect -no-snapshot -noaudio -no-boot-anim -camera-back none
+          script: python mobile/android/smoke-launch.py --serial emulator-5554
+      - name: Save Android validation reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: android-validation-${{ runner.os }}
+          path: |
+            mobile/android/app/build/reports/lint-results-debug.*
+            mobile/android/app/build/reports/launch-smoke/
+          if-no-files-found: warn
           retention-days: 14

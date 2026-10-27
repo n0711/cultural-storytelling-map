@@ -27,12 +27,20 @@ The APK is `mobile/android/app/build/outputs/apk/debug/app-debug.apk`. The **And
 
 The Wrapper scripts and JAR come from Gradle's official `v8.13.0` tag. The JAR SHA-256 was checked against Gradle's published checksum: `81a82aaea5abcc8ff68b3dfcb58b3c3c429378efd98e7433460610fecd7ae45f`. The distribution checksum is pinned in `gradle/wrapper/gradle-wrapper.properties`. See the [Gradle 8.13 Wrapper documentation](https://docs.gradle.org/8.13/userguide/gradle_wrapper.html).
 
+## Automated Android validation
+
+The workflow runs `:app:lintDebug` alongside the APK build on Windows and Linux. It retains lint's HTML/XML/text reports, including when validation fails; fatal lint findings fail the build without a baseline that hides them.
+
+The Linux job also installs that exact APK on a fresh API 35 Google APIs emulator and starts Narrify's actual launcher activity. `smoke-launch.py` requires the four real navigation labels and the interactive Cyprus map region in Chrome's accessibility hierarchy, with neither the loading nor unavailable message present. It records the APK hash, result, screenshot, UI hierarchy and diagnostic logs in `android-validation-Linux`. No replacement page, mock API, account or synthetic story is used. The check skips Chrome's first-run UI on the disposable emulator; Narrify's authentication and Digital Asset Links verification are unchanged.
+
+To rerun with an existing **rootable Google APIs emulator** that includes Chrome, build the APK and run `python mobile/android/smoke-launch.py --serial emulator-5554` from the repository root. The script refuses phone serials and verifies that the target identifies as an emulator before installation. It is a CI smoke check, not a physical-phone test. It does not verify sign-in, contribution writes, paid access, offline mode or full-screen origin association. See [Android lint](https://developer.android.com/studio/write/lint), [Emulator Runner](https://github.com/ReactiveCircus/android-emulator-runner) and [Chromium command-line setup](https://www.chromium.org/developers/how-tos/run-chromium-with-flags/#android).
+
 For full-screen verification, the deployed site's `/.well-known/assetlinks.json` must list the exact package and SHA-256 certificate fingerprint of the installed APK. A local PC build normally has a different debug certificate from the verified preview below. Without matching verification, Android Browser Helper opens a Custom Tab with browser controls. External sign-in origins keep their browser controls. A browser supporting Trusted Web Activity is required for the full-screen experience. To inspect a local certificate, run the Wrapper's `:app:signingReport` task. Do not upload your debug or release keystore.
 
 No location, camera, microphone or notification runtime permission is declared. The story location picker chooses an approximate public place; it does not read the device GPS. Offline reading is limited to the three public previews provided by the app's service worker. Authenticated records, submissions and paid story bodies are never added to the offline cache.
 
 Sources: [Chrome quick start](https://developer.chrome.com/docs/android/trusted-web-activity/quick-start), [Android Browser Helper](https://github.com/GoogleChrome/android-browser-helper/tree/android-browser-helper-2.7.4), [AGP compatibility](https://developer.android.com/build/releases/agp-8-13-0-release-notes), [Android Studio compatibility](https://developer.android.com/studio/releases#android_gradle_plugin_and_android_studio_compatibility).
 
-## Verified preview artifact
+## Previous preview artifact
 
-The build at https://github.com/n0711/cultural-storytelling-map/actions/runs/40463680423 assembled the debug APK and verified its signature with `apksigner`. SHA-256: `42ac71a5dddb15f43bd210e987b262e46e9c8ab7210b5efae681bde365136153`. The hosted asset association records this build's certificate for `tech.pelaos.narrify.debug`. This is a build-and-signature result; no physical installation or authenticated phone workflow has been verified yet.
+The older 0.1.0 preview at https://github.com/n0711/cultural-storytelling-map/actions/runs/40463680423 passed build and signature verification, but the new API 35 emulator check reproduced a startup crash: `ManageDataLauncherActivity` was absent from the manifest. Do not treat that old APK as a working launch. The 0.1.1 preview declares Browser Helper's required activities and is being verified with the emulator check. Physical installation and authenticated phone workflows remain unverified.
