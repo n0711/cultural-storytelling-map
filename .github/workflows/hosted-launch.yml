@@ -18,11 +18,11 @@ jobs:
       - uses: pnpm/action-setup@v4
         with:
           version: 11.25.0
+      # The hosted build tooling may use a checkout-local pnpm store. A cache
+      # probed from the repository root can fail after all checks have passed.
       - uses: actions/setup-node@v4
         with:
           node-version: '24'
-          cache: pnpm
-          cache-dependency-path: hosted/pnpm-lock.yaml
       - run: pnpm install --frozen-lockfile
       - run: pnpm exec tsc --noEmit
       - run: node --test tests/launch.test.mjs
