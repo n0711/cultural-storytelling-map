@@ -15,6 +15,18 @@ A hosted edition of [Cultural Storytelling Map](https://github.com/hussainJamil2
 - **Billing remains closed until live merchant configuration and an end-to-end payment/cancellation test are complete.** The launch does not claim an activated payment account, processed payment or institutional partnership.
 - This edition intentionally does not expose the local demo's upload, AI or translation endpoints. It does not deploy the development FastAPI server to Workers.
 
+## Inclusive reading and contributions
+
+Story language is now recorded separately from the community or topic of a story. The existing eleven English texts keep their exact content and source digests. They are labelled English; they are not presented as translations or as an original recording in a community's language.
+
+- The catalogue filters by published story language, category, saved status and free previews. The language selector lists only languages with published stories. Greek also includes records labelled Cypriot Greek.
+- Search ignores case and combining accents, handles Greek final sigma and Turkish dotted/dotless I, and matches words across title, place, author and public excerpt. It searches the text's own script; it does not translate or transliterate searches and never searches hidden member text.
+- Contributors can label English, Greek, Cypriot Greek, Turkish, Arabic, Armenian, Hebrew, Russian or Ukrainian text, or use Other / not specified for any unlisted language. Language labels are validated on the server. Earlier submissions without a label retain `und` (not specified).
+- Story cards, the reader, contribution fields and moderation text use automatic text direction and language tags. Each reader paragraph chooses its own direction. Names and places are isolated from surrounding text. These are text-reading features; the interface remains English.
+- Keyboard users can skip navigation, search focus is visible, result changes are announced, and contribution errors appear inside the form. Human moderation and permission checks continue to apply.
+
+`drizzle/0001_clear_young_avengers.sql` adds a language column with a constant `und` default. Apply only this pending migration to an existing local database; Sites applies it to hosted storage during publication. Do not replay the initial migration on an existing database.
+
 ## Run and verify
 
 Use Node 22.13+ and the version of pnpm recorded in `package.json`.
@@ -26,10 +38,11 @@ node --test tests/launch.test.mjs
 pnpm run build
 ```
 
-D1 schema migrations live in `drizzle/`; local state is separate from production. Apply the migration once to the local preview database before starting a new checkout. Do not seed public user accounts or demo credentials.
+D1 schema migrations live in `drizzle/`; local state is separate from production. Apply the migrations in order once to a fresh local preview database before starting a new checkout. On an existing database, apply only pending migrations. Do not seed public user accounts or demo credentials.
 
 ```sh
 node --import ./scripts/sites-env.mjs ./node_modules/wrangler/bin/wrangler.js d1 execute DB --local --config dist/server/wrangler.json --persist-to .wrangler/state --file drizzle/0000_chunky_korvac.sql
+node --import ./scripts/sites-env.mjs ./node_modules/wrangler/bin/wrangler.js d1 execute DB --local --config dist/server/wrangler.json --persist-to .wrangler/state --file drizzle/0001_clear_young_avengers.sql
 pnpm run dev
 ```
 
@@ -62,7 +75,7 @@ Existing subscriptions must be handled separately before disabling billing for a
 
 ## Evidence and limits
 
-The automated checks cover the fixed-price boundary, failed/expired membership states, public catalogue text redaction, source-content preservation, contribution validation and the actual webhook signature verifier. Local browser checks cover public preview reading, member-story denial, search filtering, island-map fallback, and the desktop and 390-pixel mobile layout. Live sign-in, contribution writes, moderator writes and live billing still require end-to-end verification. They do not establish successful merchant onboarding, real recurring payments, legal review, map-provider production capacity or institutional acceptance.
+Eleven automated tests cover original-language validation and preservation, Unicode search, combined discovery filters, migration preservation and paid-text redaction, as well as the fixed-price boundary, failed/expired membership states, public catalogue text redaction, source-content preservation, contribution validation and the actual webhook signature verifier. Local browser checks cover public preview reading, member-story denial, search filtering, island-map fallback, and the desktop and 390-pixel mobile layout. The inclusion update was checked in the browser on desktop and in a 390-pixel mobile iframe, including combined preview/language filters, map pin updates and free-story reading. An explicitly local UI fixture verified Arabic input direction (`ar`, `dir=auto`, computed RTL); it was removed before packaging. Migration tests use a temporary SQLite database. Live sign-in, contribution writes, moderator writes and live billing still require end-to-end verification. They do not establish successful merchant onboarding, real recurring payments, legal review, map-provider production capacity or institutional acceptance.
 
 Community accounts have not been independently fact-checked. Contributor permissions and editorial corrections can be resolved through the published project contact. New original content is accepted for human review. The launch preserves team attribution and makes no government endorsement claim.
 

@@ -16,8 +16,8 @@ export async function entitlement(userId:string){
  return {active:activeSubscription(s), subscription:s};
 }
 export async function stories(){
- const rows=await db().prepare("SELECT id,title,content,category,latitude,longitude,author,place,source_url,created_at FROM submissions WHERE status='approved' ORDER BY created_at DESC LIMIT 500").all();
- return [...seed,...rows.results.map((s:any)=>({id:s.id,title:s.title,content:s.content,category:s.category,latitude:s.latitude,longitude:s.longitude,author:s.author,place:s.place,preview:false,source:'Community contribution',sourceUrl:s.source_url||null,createdAt:new Date(s.created_at*1000).toISOString()}))];
+ const rows=await db().prepare("SELECT id,title,content,category,latitude,longitude,author,place,source_url,language,created_at FROM submissions WHERE status='approved' ORDER BY created_at DESC LIMIT 500").all();
+ return [...seed,...rows.results.map((s:any)=>({id:s.id,title:s.title,content:s.content,category:s.category,latitude:s.latitude,longitude:s.longitude,author:s.author,place:s.place,language:s.language,preview:false,source:'Community contribution',sourceUrl:s.source_url||null,createdAt:new Date(s.created_at*1000).toISOString()}))];
 }
 export async function initialData(){
  const user=await identity();

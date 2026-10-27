@@ -10,6 +10,8 @@ The hosted map is at https://narrify-cultural-map.fitslug32.chatgpt.site. The ne
 
 It presents eleven curated approved stories with three free previews and an introductory **€1.99/month EUR** membership. Checkout is **closed pending Stripe merchant configuration and live payment verification**. Institutional pilots have separate scope/pricing; a future government pitch does not automatically change existing subscriptions. The Windows demo below is preserved.
 
+The hosted edition now records story languages, supports script-aware reading and accent-tolerant search, and offers language and free-preview filters. Contributions in any language still require permission and human review. The interface and existing curated texts remain English; language labels do not imply translations.
+
 ## Start the Windows demo
 
 Install Git, Python **3.13** (including its launcher), and Node.js **24 LTS**. Open PowerShell:

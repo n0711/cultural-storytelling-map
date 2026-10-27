@@ -2,6 +2,7 @@
 import { useEffect, useRef, useState } from 'react';
 import workerUrl from 'maplibre-gl/dist/maplibre-gl-worker.mjs?worker&url';
 import coastline from '../data/cyprus-coastline.json';
+import {storyLanguage} from '../lib/languages.mjs';
 export default function StoryMap({stories,onSelect,focus}:{stories:any[];onSelect:(id:string)=>void;focus:any}){
  const node=useRef<HTMLDivElement>(null),map=useRef<any>(null),markers=useRef<any[]>([]),lib=useRef<any>(null),engine=useRef(''),select=useRef(onSelect);
  const [ready,setReady]=useState(false),[fallback,setFallback]=useState(false),[failed,setFailed]=useState(false);
@@ -25,9 +26,9 @@ export default function StoryMap({stories,onSelect,focus}:{stories:any[];onSelec
    if(engine.current==='leaflet'){
     const icon=M.divIcon({className:'story-pin-wrap',html:'<span class="story-pin '+(s.preview?'preview-pin':'')+'">'+(s.preview?'✦':'•')+'</span>',iconSize:[36,42],iconAnchor:[18,39]});
     const marker=M.marker([s.latitude,s.longitude],{icon,keyboard:true,title:s.title,alt:s.title}).addTo(map.current);
-    const label=document.createElement('span');label.textContent=s.title;marker.bindTooltip(label,{direction:'top',offset:[0,-35]});marker.on('click',()=>select.current(s.id));return marker;
+    const label=document.createElement('span');label.textContent=s.title;label.dir='auto';label.lang=storyLanguage(s.language).code;marker.bindTooltip(label,{direction:'top',offset:[0,-35]});const element=marker.getElement();element?.setAttribute('aria-label',s.title);element?.setAttribute('lang',storyLanguage(s.language).code);marker.on('click',()=>select.current(s.id));return marker;
    }
-   const button=document.createElement('button');button.className='story-map-marker';button.setAttribute('aria-label',s.title);button.setAttribute('title',s.title);const pin=document.createElement('span');pin.className='story-pin '+(s.preview?'preview-pin':'');pin.textContent=s.preview?'✦':'•';button.appendChild(pin);button.addEventListener('click',()=>select.current(s.id));return new M.Marker({element:button,anchor:'bottom'}).setLngLat([s.longitude,s.latitude]).addTo(map.current);
+   const button=document.createElement('button');button.className='story-map-marker';button.setAttribute('aria-label',s.title);button.setAttribute('title',s.title);button.lang=storyLanguage(s.language).code;button.dir='auto';const pin=document.createElement('span');pin.className='story-pin '+(s.preview?'preview-pin':'');pin.textContent=s.preview?'✦':'•';button.appendChild(pin);button.addEventListener('click',()=>select.current(s.id));return new M.Marker({element:button,anchor:'bottom'}).setLngLat([s.longitude,s.latitude]).addTo(map.current);
   });
  },[ready,fallback,stories]);
  useEffect(()=>{if(ready&&focus){if(engine.current==='leaflet')map.current.flyTo([focus.latitude,focus.longitude],11,{duration:.8});else map.current.flyTo({center:[focus.longitude,focus.latitude],zoom:11,essential:false});}},[ready,focus]);
