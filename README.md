@@ -6,6 +6,8 @@ The mobile app opens directly to the map with Explore, Stories, Share and Accoun
 
 `hosted/` contains the shared mobile UI and server. `mobile/android/` contains the Android package. The original React/Leaflet frontend, FastAPI/SQLite backend and Gemini Windows demo remain below.
 
+On a Windows PC, pull the latest code and double-click `Open-Narrify-Android-Studio.bat` to open the Android project. The [Android setup guide](mobile/android/README.md) covers SDK installation, Gradle Sync and running on a phone or emulator. The project includes the pinned Gradle Wrapper used by CI.
+
 **For the Windows demo: follow [the short setup instructions](docs/WINDOWS_DEMO.md), then [the 115-second filming checklist](docs/DEMO_FILMING_CHECKLIST.md).**
 
 ## Hosted launch edition
