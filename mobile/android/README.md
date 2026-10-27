@@ -41,6 +41,6 @@ No location, camera, microphone or notification runtime permission is declared. 
 
 Sources: [Chrome quick start](https://developer.chrome.com/docs/android/trusted-web-activity/quick-start), [Android Browser Helper](https://github.com/GoogleChrome/android-browser-helper/tree/android-browser-helper-2.7.4), [AGP compatibility](https://developer.android.com/build/releases/agp-8-13-0-release-notes), [Android Studio compatibility](https://developer.android.com/studio/releases#android_gradle_plugin_and_android_studio_compatibility).
 
-## Verified preview artifact
+## Previous preview artifact
 
-The build at https://github.com/n0711/cultural-storytelling-map/actions/runs/40463680423 assembled the debug APK and verified its signature with `apksigner`. SHA-256: `42ac71a5dddb15f43bd210e987b262e46e9c8ab7210b5efae681bde365136153`. The hosted asset association records this build's certificate for `tech.pelaos.narrify.debug`. This is a build-and-signature result; no physical installation or authenticated phone workflow has been verified yet.
+The older 0.1.0 preview at https://github.com/n0711/cultural-storytelling-map/actions/runs/40463680423 passed build and signature verification, but the new API 35 emulator check reproduced a startup crash: `ManageDataLauncherActivity` was absent from the manifest. Do not treat that old APK as a working launch. The 0.1.1 preview declares Browser Helper's required activities and is being verified with the emulator check. Physical installation and authenticated phone workflows remain unverified.

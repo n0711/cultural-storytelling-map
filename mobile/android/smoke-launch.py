@@ -83,6 +83,8 @@ def main():
         deadline = time.monotonic() + 90
         labels = set()
         while time.monotonic() < deadline:
+            if "Process: " + PACKAGE in adb("logcat", "-b", "crash", "-d").stdout:
+                raise RuntimeError("The Narrify launcher crashed; inspect crash-logcat.txt.")
             dumped = adb("shell", "uiautomator", "dump", "/sdcard/narrify-window.xml",
                          check=False, timeout=20)
             if dumped.returncode == 0:
