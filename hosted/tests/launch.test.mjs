@@ -8,6 +8,8 @@ import {verifyWebhook} from '../lib/webhook.mjs';
 import {DatabaseSync} from 'node:sqlite';
 import {STORY_LANGUAGES,storyLanguage,normalizeSearch,filterStories} from '../lib/languages.mjs';
 import {CYPRUS_BOUNDS,withinCyprusBounds,publicMapPoint} from '../lib/location.mjs';
+import {ownContributions} from '../lib/contributions.mjs';
+import vm from 'node:vm';
 const price={active:true,currency:'eur',unit_amount:199,type:'recurring',recurring:{interval:'month',interval_count:1,usage_type:'licensed'},billing_scheme:'per_unit'};
 test('only a fixed €1.99 monthly EUR price passes the checkout price boundary',()=>{
  assert.equal(validPrice(price),true);
@@ -115,4 +117,82 @@ test('map-selected and manually-entered coordinates share server validation',()=
  assert.deepEqual([validateStory({...story,...picked}).latitude,validateStory({...story,...picked}).longitude],[34.866,33.305]);
  assert.equal(validateStory({...story,latitude:'34.866',longitude:'33.305'}).latitude,34.866);
  for(const patch of [{latitude:'',longitude:''},{latitude:'34.3',longitude:'33.3'},{latitude:'35.1',longitude:'34.8'}])assert.throws(()=>validateStory({...story,...patch}));
+});
+function contributionDatabase(){
+ const database=new DatabaseSync(':memory:');
+ database.exec(fs.readFileSync(new URL('../drizzle/0000_chunky_korvac.sql',import.meta.url),'utf8'));
+ database.exec(fs.readFileSync(new URL('../drizzle/0001_clear_young_avengers.sql',import.meta.url),'utf8'));
+ const adapter={prepare(query){const statement=database.prepare(query);return {bind(...args){return {async all(){return {results:statement.all(...args)}}}}}}};
+ const insert=database.prepare('INSERT INTO submissions(id,user_id,title,content,category,latitude,longitude,author,place,language,status,created_at,reviewed_by) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)');
+ function add(id,userId,status,createdAt){insert.run(id,userId,'A village memory','A public opening. '.repeat(15)+'PRIVATE-BODY-END','oral_history',35.17,33.36,'A storyteller','Nicosia','ar',status,createdAt,'private-moderator-id');}
+ return {database,adapter,add};
+}
+test('contributors see their own review states without another account or private database fields',async()=>{
+ const {database,adapter,add}=contributionDatabase();
+ try{
+  add('alice-pending','alice','pending',1000);add('alice-approved','alice','approved',1001);add('alice-rejected','alice','rejected',1002);add('bob-pending','bob','pending',1003);
+  const rows=await ownContributions(adapter,'alice');
+  assert.deepEqual(rows.map(row=>row.id),['alice-rejected','alice-approved','alice-pending']);
+  assert.deepEqual(rows.map(row=>row.status),['rejected','approved','pending']);
+  assert.equal((await ownContributions(adapter,'bob'))[0].id,'bob-pending');
+  for(const row of rows){
+   assert.equal(row.language,'ar');assert.equal(row.place,'Nicosia');assert.ok(row.excerpt.length<=151);
+   for(const key of ['user_id','reviewed_by','latitude','longitude','content','source_url'])assert.ok(!(key in row));
+   assert.ok(!JSON.stringify(row).includes('PRIVATE-BODY-END'));assert.ok(!JSON.stringify(row).includes('private-moderator-id'));
+  }
+ }finally{database.close();}
+});
+test('contribution history is bounded, parameterized and requires an account identity',async()=>{
+ const {database,adapter,add}=contributionDatabase();
+ try{
+  for(let index=0;index<55;index++)add('a'+index,'alice','pending',1000+index);
+  const rows=await ownContributions(adapter,'alice');assert.equal(rows.length,50);assert.equal(rows[0].id,'a54');assert.equal(rows[49].id,'a5');
+  assert.deepEqual(await ownContributions(adapter,"alice' OR '1'='1"),[]);
+  assert.deepEqual(await ownContributions(adapter,'unrelated-account'),[]);
+  for(const id of ['',null,undefined,{},'   '])await assert.rejects(ownContributions(adapter,id));
+ }finally{database.close();}
+});
+test('the install manifest opens the mobile app with valid launcher icons',()=>{
+ const manifest=JSON.parse(fs.readFileSync(new URL('../public/manifest.webmanifest',import.meta.url),'utf8'));
+ assert.equal(manifest.id,'/app');assert.equal(manifest.start_url,'/app');assert.equal(manifest.display,'standalone');
+ for(const icon of manifest.icons){
+  const bytes=fs.readFileSync(new URL('../public'+icon.src,import.meta.url));
+  assert.equal(bytes.subarray(0,8).toString('hex'),'89504e470d0a1a0a');
+  assert.equal(icon.sizes,bytes.readUInt32BE(16)+'x'+bytes.readUInt32BE(20));
+ }
+});
+test('offline reading contains exactly the three approved free previews',()=>{
+ const html=fs.readFileSync(new URL('../public/offline.html',import.meta.url),'utf8');
+ const all=JSON.parse(fs.readFileSync(new URL('../data/stories.server.json',import.meta.url),'utf8'));
+ const escape=value=>value.replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
+ assert.equal((html.match(/<details>/g)||[]).length,3);
+ for(const story of all){
+  if(story.preview){assert.ok(html.includes(escape(story.title)));for(const paragraph of story.content.split('\n').filter(Boolean))assert.ok(html.includes(escape(paragraph)));}
+  else assert.ok(!html.includes(escape(story.title)),story.title);
+ }
+ assert.ok(!html.includes('signin-with-chatgpt'));assert.ok(!html.includes('stripe'));
+});
+function serviceWorkerFixture(offline=false){
+ const handlers={},cached=[],deleted=[],network=[];
+ const environment={URL,Response,self:{location:{origin:'https://narrify.example'},addEventListener(name,fn){handlers[name]=fn},async skipWaiting(){},clients:{async claim(){}}},caches:{async open(){return {async addAll(paths){cached.push(...paths)}}},async keys(){return ['narrify-public-old','another-app-cache','narrify-public-v1']},async delete(key){deleted.push(key)},async match(){return new Response('public offline previews')}},async fetch(request){network.push(request);if(offline)throw new Error('Offline');return new Response('personalized online page')}};
+ vm.runInNewContext(fs.readFileSync(new URL('../public/sw.js',import.meta.url),'utf8'),environment);
+ return {handlers,cached,deleted,network};
+}
+test('the service worker caches public files and excludes API, identity and payment traffic',async()=>{
+ const fixture=serviceWorkerFixture();let complete;
+ fixture.handlers.install({waitUntil(promise){complete=promise}});await complete;
+ assert.deepEqual(fixture.cached,['/offline.html','/manifest.webmanifest','/icons/icon-192.png','/icons/icon-512.png','/favicon.svg']);
+ fixture.handlers.activate({waitUntil(promise){complete=promise}});await complete;
+ assert.deepEqual(fixture.deleted,['narrify-public-old']);
+ for(const path of ['/api/stories/1','/api/contributions','/api/billing/checkout','/signin-with-chatgpt','/signout-with-chatgpt','/callback']){
+  let intercepted=false;fixture.handlers.fetch({request:{url:'https://narrify.example'+path,method:'GET',mode:'navigate'},respondWith(){intercepted=true}});assert.equal(intercepted,false,path);
+ }
+});
+test('online app navigations stay network-only and offline fallback is public preview text',async()=>{
+ for(const offline of [false,true]){
+  const fixture=serviceWorkerFixture(offline);let response;
+  fixture.handlers.fetch({request:{url:'https://narrify.example/app?contributions=1',method:'GET',mode:'navigate'},respondWith(promise){response=promise}});
+  assert.equal(await (await response).text(),offline?'public offline previews':'personalized online page');
+  assert.equal(fixture.network.length,1);assert.deepEqual(fixture.cached,[]);
+ }
 });

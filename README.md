@@ -1,6 +1,10 @@
-# Narrify — cultural storytelling map
+# Narrify — mobile cultural storytelling
 
-React/Leaflet frontend, FastAPI/SQLite backend, and server-side Gemini features.
+Narrify is an Android-first cultural storytelling map for Cyprus. Open the primary [mobile app experience](https://narrify-cultural-map.fitslug32.chatgpt.site/app). The [Android preview project](mobile/android/README.md) builds an installable APK using Android Browser Helper and shares the hosted app and backend.
+
+The mobile app opens directly to the map with Explore, Stories, Share and Account tabs. The three free previews have an offline reader. Account contributions have a private review-status history. Android installation, sign-in and offline behavior still require a real-phone check; release signing, Play Store distribution and mobile purchases are not activated.
+
+`hosted/` contains the shared mobile UI and server. `mobile/android/` contains the Android package. The original React/Leaflet frontend, FastAPI/SQLite backend and Gemini Windows demo remain below.
 
 **For the Windows demo: follow [the short setup instructions](docs/WINDOWS_DEMO.md), then [the 115-second filming checklist](docs/DEMO_FILMING_CHECKLIST.md).**
 

@@ -4,6 +4,7 @@ import { verifyWebhook } from '../../../lib/webhook.mjs';
 import { identity, isAdmin, config, db, now, stories, entitlement, initialData, rateLimit, HttpError, requireOrigin } from '../../../lib/server';
 import { stripe, checkedPrice, customer, syncSubscription, reconcile } from '../../../lib/billing';
 import { publicStory, validateStory } from '../../../lib/policy.mjs';
+import { ownContributions } from '../../../lib/contributions.mjs';
 export const dynamic='force-dynamic';
 const json=(v:any,status=200)=>Response.json(v,{status,headers:{'Cache-Control':'private, no-store','X-Content-Type-Options':'nosniff'}});
 async function body(req:Request){const raw=await req.text();if(raw.length>18000)throw new HttpError(413,'That request is too large.');try{return JSON.parse(raw)}catch{throw new HttpError(400,'Invalid request.')}}
@@ -68,6 +69,9 @@ async function handle(req:Request){
   const u=requireUser();if(!(await entitlement(u.userId)).active)throw new HttpError(402,'Saved stories are included with membership.');await rateLimit('save:'+u.userId,200);const b=await body(req);
   if(!(await stories()).some((s:any)=>s.id===b.storyId))throw new HttpError(404,'Story not found.');
   if(b.saved===true)await db().prepare('INSERT OR IGNORE INTO favorites(user_id,story_id) VALUES(?,?)').bind(u.userId,b.storyId).run();else await db().prepare('DELETE FROM favorites WHERE user_id=? AND story_id=?').bind(u.userId,b.storyId).run();return json({ok:true});
+ }
+ if(path==='contributions'&&req.method==='GET'){
+  const u=requireUser();return json(await ownContributions(db(),u.userId));
  }
  if(path==='contributions'&&req.method==='POST'){
   const u=requireUser();await rateLimit('submit:'+u.userId,5,86400);let s;try{s=validateStory(await body(req))}catch(e:any){throw new HttpError(400,e.message)}

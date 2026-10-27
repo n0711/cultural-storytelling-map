@@ -1,0 +1,22 @@
+{
+  "id": "/app",
+  "name": "Narrify — Cyprus Stories",
+  "short_name": "Narrify",
+  "description": "Discover and share cultural stories from Cyprus.",
+  "lang": "en",
+  "start_url": "/app",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#fafbf9",
+  "theme_color": "#fafbf9",
+  "icons": [
+    {"src":"/icons/icon-192.png","sizes":"192x192","type":"image/png","purpose":"any maskable"},
+    {"src":"/icons/icon-512.png","sizes":"512x512","type":"image/png","purpose":"any maskable"}
+  ],
+  "shortcuts": [
+    {"name":"Explore Cyprus","url":"/app"},
+    {"name":"Share a story","url":"/app?contribute=1"},
+    {"name":"My contributions","url":"/app?contributions=1"}
+  ]
+}

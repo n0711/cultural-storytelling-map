@@ -11,3 +11,7 @@ For full-screen verification, the deployed site's `/.well-known/assetlinks.json`
 No location, camera, microphone or notification runtime permission is declared. The story location picker chooses an approximate public place; it does not read the device GPS. Offline reading is limited to the three public previews provided by the app's service worker. Authenticated records, submissions and paid story bodies are never added to the offline cache.
 
 Sources: [Chrome quick start](https://developer.chrome.com/docs/android/trusted-web-activity/quick-start), [Android Browser Helper](https://github.com/GoogleChrome/android-browser-helper/tree/android-browser-helper-2.7.4), [AGP compatibility](https://developer.android.com/build/releases/agp-8-13-0-release-notes).
+
+## Verified preview artifact
+
+The build at https://github.com/n0711/cultural-storytelling-map/actions/runs/40463680423 assembled the debug APK and verified its signature with `apksigner`. SHA-256: `42ac71a5dddb15f43bd210e987b262e46e9c8ab7210b5efae681bde365136153`. The hosted asset association records this build's certificate for `tech.pelaos.narrify.debug`. This is a build-and-signature result; no physical installation or authenticated phone workflow has been verified yet.
