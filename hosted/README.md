@@ -10,7 +10,7 @@ A hosted edition of [Cultural Storytelling Map](https://github.com/hussainJamil2
 
 ## Mobile is the primary experience
 
-`/app` opens directly into the map, with Explore, Stories, Share and Account tabs, safe-area spacing and a fixed bottom bar. Search, language/category filters, the original-language reader, map contribution picker and My contributions reuse the server routes and permission rules. Sign-in return paths and shared story links stay under `/app`. The desktop homepage supports the app.
+`/app` opens directly into the map, with Explore, Stories, Share and Account tabs, safe-area spacing and a fixed bottom bar. Search, language/category filters, the original-language reader, map contribution picker and My contributions reuse the server routes and permission rules. Sign-in return paths and shared story links stay under `/app`. The desktop homepage supports the app. About, Privacy and Terms return directly to the primary app, and the privacy page describes the public-preview offline cache.
 
 The web manifest supports standalone installation with branded 192/512-pixel icons and shortcuts. The service worker stores only a static offline reader containing the three approved free previews and public install assets. Account records, story APIs, billing, auth callbacks and submitted content are not intercepted or put in offline storage. Online app pages are network-only, with a public-preview fallback on a failed connection. There is no offline submission queue. `scripts/build-mobile-assets.mjs` regenerates the public reader before each build.
 
