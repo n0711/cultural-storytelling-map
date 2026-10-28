@@ -22,7 +22,7 @@
     display: flex;
     flex-direction: column;
     gap: 8px;
-    animation: narrify-fade-up 0.4s var(--ease) both;
+    animation: narrify-fade-up 0.4s var(--ease) backwards;
 }
 
 .map-search-field {
@@ -413,12 +413,281 @@
     border-radius: var(--radius-sm) 0 0 0;
 }
 
-/* adjusts floating controls on smaller screens */
+/* ---------------- reset view button ---------------- */
+
+/* sits just under the zoom control, styled to match it */
+.map-reset {
+    position: absolute;
+    top: 96px;
+    right: 10px;
+    z-index: 1000;
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+    box-shadow: var(--shadow-md);
+}
+
+.map-reset button {
+    display: grid;
+    place-items: center;
+    width: 30px;
+    height: 30px;
+    border: none;
+    background: rgba(255, 255, 255, 0.94);
+    backdrop-filter: blur(10px);
+    color: var(--ink);
+    font-size: 13px;
+    cursor: pointer;
+    transition: background 0.2s var(--ease), color 0.2s var(--ease);
+}
+
+.map-reset button:hover,
+.map-reset button:focus-visible {
+    background: var(--brand);
+    color: #fff;
+}
+
+/* ---------------- legend ---------------- */
+
+.map-legend {
+    position: absolute;
+    left: 16px;
+    bottom: 28px;
+    z-index: 500;
+    width: 220px;
+    max-width: calc(100% - 32px);
+    background: rgba(255, 255, 255, 0.94);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+    overflow: hidden;
+    animation: narrify-fade-up 0.4s var(--ease) backwards;
+}
+
+.map-legend-toggle {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    padding: 10px 14px;
+    border: none;
+    background: transparent;
+    color: var(--ink);
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.map-legend-toggle > i:first-child {
+    color: var(--brand);
+}
+
+.map-legend-caret {
+    margin-left: auto;
+    font-size: 11px;
+    color: var(--ink-faint);
+}
+
+.map-legend-list {
+    list-style: none;
+    margin: 0;
+    padding: 0 6px 8px;
+    max-height: 46vh;
+    overflow-y: auto;
+}
+
+.map-legend-list button {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    padding: 7px 8px;
+    border: none;
+    border-radius: var(--radius-sm);
+    background: transparent;
+    color: var(--ink-soft);
+    font-size: 13px;
+    text-align: left;
+    cursor: pointer;
+    transition: background 0.2s var(--ease);
+}
+
+.map-legend-list button:hover:not(:disabled) {
+    background: var(--bg);
+}
+
+.map-legend-list button.active {
+    background: var(--brand-soft);
+    color: var(--ink);
+    font-weight: 600;
+}
+
+.map-legend-list button:disabled {
+    opacity: 0.45;
+    cursor: default;
+}
+
+.map-legend-dot {
+    flex: none;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    border: 2px solid #fff;
+    box-shadow: 0 0 0 1px var(--border);
+}
+
+.map-legend-dot-all {
+    background: conic-gradient(
+        #007bff, #d64545, #2e9e5b, #e0a325, #7c5cbf, #4a5578, #c2559a, #e2703a, #007bff
+    );
+}
+
+.map-legend-label {
+    flex: 1;
+    min-width: 0;
+}
+
+.map-legend-count {
+    font-variant-numeric: tabular-nums;
+    font-size: 12px;
+    color: var(--ink-faint);
+}
+
+/* ---------------- story clusters ---------------- */
+
+.map-cluster {
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    background: var(--brand);
+    color: #fff;
+    font-weight: 700;
+    border: 3px solid #fff;
+    box-shadow: 0 0 0 6px rgba(0, 123, 255, 0.22), var(--shadow-md);
+    transition: transform 0.2s var(--ease);
+}
+
+.map-cluster:hover {
+    transform: scale(1.1);
+}
+
+.map-cluster-sm { font-size: 14px; }
+.map-cluster-md { font-size: 15px; background: var(--brand-dark); }
+.map-cluster-lg { font-size: 16px; background: var(--ai-accent); box-shadow: 0 0 0 6px rgba(55, 45, 255, 0.22), var(--shadow-md); }
+
+/* the cluster plugin animates markers with these classes */
+.leaflet-cluster-anim .leaflet-marker-icon,
+.leaflet-cluster-anim .leaflet-marker-shadow {
+    transition: transform 0.3s ease-out, opacity 0.3s ease-in;
+}
+
+/* ---------------- keyboard focus ---------------- */
+
+.map-legend button:focus-visible,
+.map-search-clear:focus-visible,
+.popup-btn:focus-visible,
+.map-empty-btn:focus-visible {
+    outline: 3px solid var(--brand-soft);
+    outline-offset: 1px;
+    box-shadow: 0 0 0 2px var(--brand);
+}
+
+/* ---------------- smaller screens ---------------- */
+
 @media (max-width: 768px) {
+    /* the search field stops short of the zoom control on the right */
     .map-search {
         top: 12px;
         left: 12px;
-        right: 12px;
+        right: 64px;
         width: auto;
+        max-width: none;
+    }
+
+    /* popups fit narrow phones instead of a fixed 280px */
+    .leaflet-popup-content,
+    .popup-card {
+        width: min(280px, calc(100vw - 96px)) !important;
+    }
+
+    .popup-image {
+        height: 128px;
+    }
+
+    /* the menu tab sits at the left edge, so the legend moves clear of it
+       and anchors to the bottom right, away from the thumb-reach drawer */
+    .map-legend {
+        left: auto;
+        right: 12px;
+        bottom: 24px;
+        width: 200px;
+    }
+
+    .map-legend-list {
+        max-height: 34vh;
+    }
+
+    /* an open story popup needs the room, so the floating panels step aside */
+    .map-search,
+    .map-legend {
+        transition: opacity 0.2s var(--ease);
+    }
+
+    .popup-open .map-search,
+    .popup-open .map-legend {
+        opacity: 0;
+        pointer-events: none;
+    }
+
+    .map-reset {
+        top: 112px;
+        right: 12px;
+    }
+}
+
+/* touch screens: larger tap targets than a mouse needs */
+@media (pointer: coarse) {
+    .leaflet-control-zoom a,
+    .map-reset button {
+        width: 40px;
+        height: 40px;
+        line-height: 40px;
+        font-size: 18px;
+    }
+
+    .map-reset button {
+        font-size: 15px;
+    }
+
+    .map-reset {
+        top: 112px;
+        right: 10px;
+    }
+
+    .map-search-clear {
+        width: 34px;
+        height: 34px;
+        font-size: 13px;
+    }
+
+    .map-search-field input {
+        /* 16px stops iOS zooming the page when the field is focused */
+        font-size: 16px;
+    }
+
+    .leaflet-container a.leaflet-popup-close-button {
+        width: 36px;
+        height: 36px;
+        font-size: 22px;
+        line-height: 36px;
+    }
+
+    .map-legend-list button {
+        padding: 11px 8px;
+    }
+
+    .map-legend-toggle {
+        padding: 12px 14px;
     }
 }
