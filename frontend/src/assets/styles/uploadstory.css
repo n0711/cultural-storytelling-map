@@ -206,6 +206,10 @@
     background: #eaf0f6;
 }
 
+.location-picker-map {
+    height: 230px;
+}
+
 .map-overlay {
     position: absolute;
     bottom: 12px;
@@ -611,5 +615,32 @@
 
     .submit-section .main-btn {
         width: 100%;
+    }
+
+    /* a taller picker is easier to aim at with a thumb */
+    .location-picker-map {
+        height: 300px;
+    }
+
+    /* the pin hint moves to the top, clear of the attribution along the
+       bottom edge and the zoom buttons at the top right */
+    .map-overlay {
+        top: 12px;
+        bottom: auto;
+        left: 12px;
+        max-width: calc(100% - 64px);
+    }
+}
+
+@media (pointer: coarse) {
+    .location-picker-map .leaflet-control-zoom a {
+        width: 40px;
+        height: 40px;
+        line-height: 40px;
+    }
+
+    /* the overlay has to clear the larger zoom buttons */
+    .map-overlay {
+        max-width: calc(100% - 74px);
     }
 }

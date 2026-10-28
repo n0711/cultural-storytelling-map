@@ -168,4 +168,19 @@
     .nav-user {
         margin-top: 8px;
     }
+
+    .navbar-nav .nav-link {
+        padding: 10px 4px !important;
+    }
+}
+
+@media (pointer: coarse) {
+    .custom-toggler {
+        min-width: 44px;
+        min-height: 44px;
+    }
+
+    .navbar .btn {
+        min-height: 44px;
+    }
 }

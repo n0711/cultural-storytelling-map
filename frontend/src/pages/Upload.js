@@ -280,7 +280,7 @@ export default function Upload() {
                             type="text"
                             name="title"
                             className="form-control p-3"
-                            placeholder="Enter a memorable name for your story"
+                            placeholder="Give your story a name"
                             value={formData.title}
                             onChange={handleInputChange}
                         />
@@ -401,7 +401,8 @@ export default function Upload() {
                                 maxBounds={CYPRUS_BOUNDS}
                                 maxBoundsViscosity={1.0}
                                 zoomControl={false}
-                                style={{ height: "230px", borderRadius: "15px" }}
+                                className="location-picker-map"
+                                style={{ borderRadius: "15px" }}
                             >
                                 <TileLayer
                                     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
