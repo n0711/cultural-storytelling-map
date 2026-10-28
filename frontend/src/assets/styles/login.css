@@ -373,14 +373,58 @@ body,
         height: auto;
     }
 
+    /* the page was locked to 100vh, which clipped the top of the content
+       once the form grew taller than a phone screen */
+    .login-page {
+        height: auto;
+        min-height: 100vh;
+        min-height: 100dvh;
+    }
+
+    .login-container {
+        flex: 1 0 auto;
+    }
+
+    /* keep the brand but drop the long copy, so the sign-in form is the first
+       thing on screen. Bootstrap's d-flex outranks a plain display:none here,
+       so this trims the panel rather than hiding it */
     .login-left {
-        display: none !important;
+        flex: none;
+        min-height: auto;
+        padding: 28px 20px 0;
+    }
+
+    .branding-mark {
+        margin-bottom: 0;
+        gap: 14px;
+    }
+
+    .branding-mark img {
+        width: 52px;
+        height: 52px;
+    }
+
+    .branding-mark-text strong {
+        font-size: 32px;
+    }
+
+    .branding-mark-text span {
+        margin-top: 3px;
+        font-size: 11px;
+    }
+
+    .branding-content h2,
+    .branding-content p,
+    .branding-expansion {
+        display: none;
     }
 
     .login-right {
-        padding: 40px 20px;
+        flex: 1 0 auto;
+        padding: 24px 20px 40px;
         min-height: auto;
         width: 100% !important;
+        align-items: flex-start !important;
     }
 
     .login-card {
@@ -400,5 +444,15 @@ body,
 
     .login-card {
         padding: 30px 20px;
+    }
+}
+
+/* touch screens: the small text links beside the form need a bigger target */
+@media (pointer: coarse) {
+    .forgot-link,
+    .register-link {
+        display: inline-block;
+        padding: 12px 6px;
+        margin: -12px -6px;
     }
 }

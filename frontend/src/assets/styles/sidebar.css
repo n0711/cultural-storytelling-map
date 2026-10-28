@@ -141,3 +141,11 @@
     background: var(--danger);
     color: #fff;
 }
+
+/* touch screens: a 30px close button is hard to hit */
+@media (pointer: coarse) {
+    .close-btn {
+        width: 42px;
+        height: 42px;
+    }
+}

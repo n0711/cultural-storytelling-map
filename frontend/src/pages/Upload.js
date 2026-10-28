@@ -401,7 +401,8 @@ export default function Upload() {
                                 maxBounds={CYPRUS_BOUNDS}
                                 maxBoundsViscosity={1.0}
                                 zoomControl={false}
-                                style={{ height: "230px", borderRadius: "15px" }}
+                                className="location-picker-map"
+                                style={{ borderRadius: "15px" }}
                             >
                                 <TileLayer
                                     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
