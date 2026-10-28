@@ -280,7 +280,7 @@ export default function Upload() {
                             type="text"
                             name="title"
                             className="form-control p-3"
-                            placeholder="Enter a memorable name for your story"
+                            placeholder="Give your story a name"
                             value={formData.title}
                             onChange={handleInputChange}
                         />
