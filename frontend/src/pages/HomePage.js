@@ -52,6 +52,7 @@ export default function HomePage() {
                 <div className="map-wrapper flex-grow-1">
                     <MapView
                         activeCategory={activeCategory}
+                        onCategoryChange={setActiveCategory}
                         focusStoryId={focusStoryId}
                         focusLocationLabel={focusLocationLabel}
                     />
