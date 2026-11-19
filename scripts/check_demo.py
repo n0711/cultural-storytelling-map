@@ -12,6 +12,7 @@ sys.path.insert(0, str(BACKEND))
 from dotenv import load_dotenv
 
 load_dotenv(BACKEND / ".env", override=True)
+# Load demo environment settings before importing the application client.
 logging.disable(logging.CRITICAL)
 from app.core import ai_client
 

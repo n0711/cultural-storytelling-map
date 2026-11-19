@@ -1,0 +1,19 @@
+name: Python syntax check
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  syntax:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Parse backend and demo helper modules
+        run: python3 -m compileall -q backend scripts
